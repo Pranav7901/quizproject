@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation"
 import { QuizQuestion } from "@/components/quiz-question"
 
 export const questions = [
-  // Section A: Student Profile
+  // === Section A: Student Profile ===
   {
     id: 1,
     section: "Student Profile",
@@ -32,7 +32,6 @@ export const questions = [
       { value: "male", label: "Male" },
       { value: "female", label: "Female" },
       { value: "transgender", label: "Transgender" },
-      
     ],
   },
   {
@@ -63,10 +62,10 @@ export const questions = [
       { value: "1st", label: "1st Year" },
       { value: "2nd", label: "2nd Year" },
       { value: "3rd", label: "3rd Year" },
-      
     ],
   },
-  // Section B: Background Knowledge
+
+  // === Section B: Background Knowledge ===
   {
     id: 7,
     section: "Background Knowledge",
@@ -95,14 +94,14 @@ export const questions = [
       { value: "javascript", label: "JavaScript" },
       { value: "sql", label: "SQL" },
       { value: "mobile", label: "Kotlin / Swift" },
-      { value: "dot-net", label: "Dot Net" },
+      { value: "dot-net", label: ".NET" },
       { value: "php", label: "PHP" },
     ],
   },
   {
     id: 9,
     section: "Background Knowledge",
-    question: "Have you worked on any Software Development Projects projects?",
+    question: "Have you worked on any Software Development Projects?",
     type: "radio" as const,
     options: [
       { value: "yes", label: "Yes" },
@@ -120,7 +119,8 @@ export const questions = [
       { value: "advanced", label: "Advanced" },
     ],
   },
-  // Section C: Interests and Goals
+
+  // === Section C: Interests and Goals ===
   {
     id: 11,
     section: "Interests and Goals",
@@ -138,7 +138,6 @@ export const questions = [
       { value: "iot", label: "IoT" },
       { value: "ui-ux", label: "UI/UX Design" },
       { value: "blockchain", label: "Blockchain" },
-      
     ],
   },
   {
@@ -147,14 +146,13 @@ export const questions = [
     question: "What is your career goal after graduation?",
     type: "radio" as const,
     options: [
-      {value: "web-development", label: "Website Development" },
+      { value: "web-dev", label: "Website Development" },
       { value: "software-dev", label: "Software Developer" },
       { value: "data-scientist", label: "Data Scientist" },
       { value: "cybersecurity", label: "Cybersecurity Analyst" },
       { value: "ai-engineer", label: "AI/ML Engineer" },
       { value: "cloud-engineer", label: "Cloud/DevOps Engineer" },
       { value: "designer", label: "UI/UX Designer" },
-      
       { value: "startup", label: "Startup Founder" },
       { value: "undecided", label: "Not yet decided" },
     ],
@@ -168,20 +166,20 @@ export const questions = [
       { value: "job-prospects", label: "Improve job prospects" },
       { value: "higher-studies", label: "Prepare for higher studies" },
       { value: "trending-skill", label: "Learn a trending skill" },
-      
     ],
   },
-  // Section D: Learning Preferences & Constraints
+
+  // === Section D: Learning Preferences ===
   {
     id: 14,
     section: "Learning Preferences",
     question: "How many hours per week can you dedicate to an add-on course?",
     type: "radio" as const,
     options: [
-      { value: "1-2", label: "1 to 2 Hours" },
-      { value: "2-3", label: "2 to 3 Hours" },
-      { value: "3-4", label: "3 to 4 Hours" },
-      { value: "4-5", label: "4 to 5 Hours" },
+      { value: "1-2", label: "1–2 Hours" },
+      { value: "2-3", label: "2–3 Hours" },
+      { value: "3-4", label: "3–4 Hours" },
+      { value: "4-5", label: "4–5 Hours" },
     ],
   },
   {
@@ -191,12 +189,11 @@ export const questions = [
     type: "radio" as const,
     options: [
       { value: "self-paced", label: "Self-paced (MOOC style)" },
-      { value: "instructor-led", label: "Instructor-led online classes" },
+      { value: "instructor-led", label: "Instructor-led online" },
       { value: "offline", label: "Offline classroom/workshop" },
       { value: "hybrid", label: "Hybrid (online + in-person)" },
       { value: "in-same-institute", label: "In Same Institute" },
       { value: "outside-institute", label: "Outside Institute" },
-      
     ],
   },
   {
@@ -207,11 +204,9 @@ export const questions = [
     options: [
       { value: "1-2-weeks", label: "1–2 weeks" },
       { value: "1-month", label: "1 month" },
-      {value: "1-2-months", label: "1–2 months" },
+      { value: "1-2-months", label: "1–2 months" },
       { value: "2-3-months", label: "2–3 months" },
       { value: "flexible", label: "Flexible duration" },
-      
-
     ],
   },
   {
@@ -233,7 +228,6 @@ export const questions = [
     options: [
       { value: "internet", label: "Internet issues" },
       { value: "time", label: "Lack of time" },
-      
       { value: "language", label: "Difficulty understanding English content" },
     ],
   },
@@ -245,31 +239,28 @@ export default function QuizPage() {
   const [error, setError] = useState("")
   const router = useRouter()
 
-  
-
   const handleNext = () => {
     const currentQ = questions[currentQuestion]
     const currentAnswer = answers[currentQ.id]
+
     const hasAnswer =
       currentAnswer &&
       ((typeof currentAnswer === "string" && currentAnswer.trim() !== "") ||
         (Array.isArray(currentAnswer) && currentAnswer.length > 0))
 
     if (!hasAnswer) {
-      setError("Please answer this question before continuing.")
+      setError("⚠️ Please answer this question before continuing.")
       return
     }
 
-    // 🚨 Validate Age
     if (currentQ.id === 2) {
       const age = Number(currentAnswer)
       if (isNaN(age) || age >= 21) {
-        setError("Age must be below 21 to proceed.")
+        setError("⚠️ Age must be below 21 to proceed.")
         return
       }
     }
 
-    // ✅ Clear error and move ahead
     setError("")
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion((prev) => prev + 1)
@@ -288,7 +279,7 @@ export default function QuizPage() {
       ...prev,
       [questions[currentQuestion].id]: value,
     }))
-    setError("") // Clear error on input change
+    setError("")
   }
 
   const progress = ((currentQuestion + 1) / questions.length) * 100
@@ -299,19 +290,21 @@ export default function QuizPage() {
       (Array.isArray(currentAnswer) && currentAnswer.length > 0))
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 p-4 transition-all">
       <div className="max-w-3xl mx-auto pt-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-center mb-4">Course Recommendation Questionnaire</h1>
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-bold mb-4 text-indigo-800">Course Recommendation Questionnaire</h1>
           <Progress value={progress} className="w-full" />
-          <p className="text-center mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-gray-600">
             Question {currentQuestion + 1} of {questions.length}
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardDescription>Please provide accurate information for better course recommendations</CardDescription>
+            <CardDescription>
+              Please provide accurate information for better course recommendations.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <QuizQuestion
@@ -320,13 +313,13 @@ export default function QuizPage() {
               onChange={handleAnswerChange}
             />
 
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            {error && <p className="text-red-500 text-sm mt-2 text-center">{error}</p>}
 
             <div className="flex justify-between mt-8">
               <Button variant="outline" onClick={handlePrevious} disabled={currentQuestion === 0}>
                 Previous
               </Button>
-              <Button onClick={handleNext} disabled={!hasAnswer}>
+              <Button onClick={handleNext}>
                 {currentQuestion === questions.length - 1 ? "Get Recommendations" : "Next"}
               </Button>
             </div>
