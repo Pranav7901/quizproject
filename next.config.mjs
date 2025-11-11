@@ -13,23 +13,8 @@ const nextConfig = {
     unoptimized: true,
   },
 
-  // ✅ Ensures Next.js uses the correct router system and works well on Vercel
+  // ✅ Required for App Router projects on Vercel
   output: "standalone",
-
-  // ✅ Enables app directory routing (for Next.js 13+ / 15)
-  experimental: {
-    appDir: true,
-  },
-
-  // ✅ Optional: ensures fallback to index for client-side navigation
-  async rewrites() {
-    return [
-      {
-        source: "/:path*",
-        destination: "/",
-      },
-    ]
-  },
 }
 
 export default nextConfig
