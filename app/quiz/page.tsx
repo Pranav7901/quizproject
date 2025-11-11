@@ -245,10 +245,7 @@ export default function QuizPage() {
   const [error, setError] = useState("")
   const router = useRouter()
 
-  useEffect(() => {
-    const user = localStorage.getItem("user")
-    if (!user) router.push("/")
-  }, [router])
+  
 
   const handleNext = () => {
     const currentQ = questions[currentQuestion]
